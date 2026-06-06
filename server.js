@@ -30,11 +30,21 @@ app.post('/airtime', async (req, res) => {
       }
     );
     console.log('Airtime response:', response.data);
-    res.json(response.data);
+    const data = response.data;
+    if (data.Status === 'successful') {
+      res.json({ success: true, message: 'Airtime purchased successfully!' });
+    } else {
+      res.status(400).json({
+        success: false,
+        message: data.api_response || data.message || 'Transaction failed'
+      });
+    }
   } catch (e) {
-    console.error('Airtime error:', e.response?.data || e.message);
-    res.status(400).json({ 
-      error: e.response?.data || e.message 
+    console.error('Airtime error:', e.response?.data);
+    const errData = e.response?.data;
+    res.status(400).json({
+      success: false,
+      message: errData?.api_response || errData?.message || e.message || 'Airtime purchase failed'
     });
   }
 });
@@ -60,11 +70,21 @@ app.post('/data', async (req, res) => {
       }
     );
     console.log('Data response:', response.data);
-    res.json(response.data);
+    const data = response.data;
+    if (data.Status === 'successful') {
+      res.json({ success: true, message: 'Data purchased successfully!' });
+    } else {
+      res.status(400).json({
+        success: false,
+        message: data.api_response || data.message || 'Transaction failed'
+      });
+    }
   } catch (e) {
-    console.error('Data error:', e.response?.data || e.message);
-    res.status(400).json({ 
-      error: e.response?.data || e.message 
+    console.error('Data error:', e.response?.data);
+    const errData = e.response?.data;
+    res.status(400).json({
+      success: false,
+      message: errData?.api_response || errData?.message || e.message || 'Data purchase failed'
     });
   }
 });
